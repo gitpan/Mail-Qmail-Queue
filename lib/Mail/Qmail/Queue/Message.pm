@@ -1,5 +1,5 @@
 package Mail::Qmail::Queue::Message;
-our $VERSION='0.01';
+our $VERSION='0.02';
 #
 # Copyright 2006 Scott Gifford
 #
@@ -131,7 +131,7 @@ sub receive
 Send the message using the L<qmail-queue|qmail-queue(8)> protocol.
 The exit status from the C<qmail-queue> program will be returned, so 0
 indicates success.  Valid options are the options for
-L<Mail::Qmail::Queue::Send-E<GT>new|Mail::Qmail::Queue::Send/new>.
+L<Mail::Qmail::Queue::Send-E<gt>new|Mail::Qmail::Queue::Send/new>.
 
 =cut
 

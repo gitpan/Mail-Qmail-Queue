@@ -10,6 +10,7 @@
 #
 #   MakeMaker Parameters:
 
+#	EXE_FILES => [q[script/qqtest], q[script/qqdump]]
 #	NAME => q[Mail::Qmail::Queue]
 #	PREREQ_PM => { constant=>q[0], Getopt::Std=>q[0], FileHandle=>q[0], Exporter=>q[0], POSIX=>q[0], warnings=>q[0], Test::More=>q[0], Carp=>q[0] }
 #	VERSION_FROM => q[lib/Mail/Qmail/Queue/Message.pm]
@@ -110,7 +111,8 @@ O_FILES =
 H_FILES = 
 HTMLLIBPODS    = 
 HTMLSCRIPTPODS = 
-MAN1PODS = 
+MAN1PODS = script/qqdump \
+	script/qqtest
 MAN3PODS = README.pod \
 	lib/Mail/Qmail/Queue/Error.pm \
 	lib/Mail/Qmail/Queue/Message.pm \
@@ -337,6 +339,16 @@ $(INST_ARCHAUTODIR)/.exists :: /usr/lib/perl/5.6.1/CORE/perl.h
 
 	-@$(CHMOD) $(PERM_RWX) $(INST_ARCHAUTODIR)
 
+config :: $(INST_MAN1DIR)/.exists
+	@$(NOOP)
+
+
+$(INST_MAN1DIR)/.exists :: /usr/lib/perl/5.6.1/CORE/perl.h
+	@$(MKPATH) $(INST_MAN1DIR)
+	@$(EQUALIZE_TIMESTAMP) /usr/lib/perl/5.6.1/CORE/perl.h $(INST_MAN1DIR)/.exists
+
+	-@$(CHMOD) $(PERM_RWX) $(INST_MAN1DIR)
+
 config :: $(INST_MAN3DIR)/.exists
 	@$(NOOP)
 
@@ -408,13 +420,19 @@ POD2MAN = $(PERL) -we '%m=@ARGV;for (keys %m){' \
 -e 'system(qq[$$^X ].q["-I$(PERL_ARCHLIB)" "-I$(PERL_LIB)" $(POD2MAN_EXE) ].qq[$$_>$$m{$$_}])==0 or warn "Couldn\047t install $$m{$$_}\n";' \
 -e 'chmod(oct($(PERM_RW))), $$m{$$_} or warn "chmod $(PERM_RW) $$m{$$_}: $$!\n";}'
 
-manifypods : pure_all lib/Mail/Qmail/Queue/Receive/Envelope.pm \
+manifypods : pure_all script/qqdump \
+	script/qqtest \
+	lib/Mail/Qmail/Queue/Receive/Envelope.pm \
 	lib/Mail/Qmail/Queue/Message.pm \
 	lib/Mail/Qmail/Queue/Error.pm \
 	lib/Mail/Qmail/Queue/Send.pm \
 	README.pod \
 	lib/Mail/Qmail/Queue/Receive/Body.pm
 	@$(POD2MAN) \
+	script/qqdump \
+	$(INST_MAN1DIR)/qqdump.$(MAN1EXT) \
+	script/qqtest \
+	$(INST_MAN1DIR)/qqtest.$(MAN1EXT) \
 	lib/Mail/Qmail/Queue/Receive/Envelope.pm \
 	$(INST_MAN3DIR)/Mail::Qmail::Queue::Receive::Envelope.$(MAN3EXT) \
 	lib/Mail/Qmail/Queue/Message.pm \
@@ -432,6 +450,35 @@ manifypods : pure_all lib/Mail/Qmail/Queue/Receive/Envelope.pm \
 
 
 # --- MakeMaker installbin section:
+
+$(INST_SCRIPT)/.exists :: /usr/lib/perl/5.6.1/CORE/perl.h
+	@$(MKPATH) $(INST_SCRIPT)
+	@$(EQUALIZE_TIMESTAMP) /usr/lib/perl/5.6.1/CORE/perl.h $(INST_SCRIPT)/.exists
+
+	-@$(CHMOD) $(PERM_RWX) $(INST_SCRIPT)
+
+EXE_FILES = script/qqtest script/qqdump
+
+FIXIN = $(PERL) -I$(PERL_ARCHLIB) -I$(PERL_LIB) -MExtUtils::MakeMaker \
+    -e "MY->fixin(shift)"
+
+pure_all :: $(INST_SCRIPT)/qqdump $(INST_SCRIPT)/qqtest
+	@$(NOOP)
+
+realclean ::
+	rm -f $(INST_SCRIPT)/qqdump $(INST_SCRIPT)/qqtest
+
+$(INST_SCRIPT)/qqdump: script/qqdump Makefile $(INST_SCRIPT)/.exists
+	@rm -f $(INST_SCRIPT)/qqdump
+	cp script/qqdump $(INST_SCRIPT)/qqdump
+	$(FIXIN) $(INST_SCRIPT)/qqdump
+	-@$(CHMOD) $(PERM_RWX) $(INST_SCRIPT)/qqdump
+
+$(INST_SCRIPT)/qqtest: script/qqtest Makefile $(INST_SCRIPT)/.exists
+	@rm -f $(INST_SCRIPT)/qqtest
+	cp script/qqtest $(INST_SCRIPT)/qqtest
+	$(FIXIN) $(INST_SCRIPT)/qqtest
+	-@$(CHMOD) $(PERM_RWX) $(INST_SCRIPT)/qqtest
 
 
 # --- MakeMaker subdirs section:

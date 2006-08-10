@@ -1,5 +1,5 @@
 package Mail::Qmail::Queue::Receive::Body;
-our $VERSION = 0.01;
+our $VERSION = 0.02;
 #
 # Copyright 2006 Scott Gifford
 #

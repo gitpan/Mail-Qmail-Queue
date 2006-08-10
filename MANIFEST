@@ -11,7 +11,6 @@ lib/Mail/Qmail/Queue/Message.pm
 lib/Mail/Qmail/Queue/Receive/Body.pm
 lib/Mail/Qmail/Queue/Receive/Envelope.pm
 lib/Mail/Qmail/Queue/Send.pm
-pm_to_blib
 script/qqdump
 script/qqtest
 t/00compile.t
